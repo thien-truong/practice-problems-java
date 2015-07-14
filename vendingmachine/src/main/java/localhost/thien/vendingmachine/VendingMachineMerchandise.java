@@ -1,6 +1,7 @@
 package localhost.thien.vendingmachine;
 
 public class VendingMachineMerchandise {
+
     private String merchandiseCode;
     private String merchandiseName;
     private double retailPrice;
@@ -65,6 +66,5 @@ public class VendingMachineMerchandise {
                 break;
         }
     }
-
 
 }

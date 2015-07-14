@@ -34,11 +34,18 @@ public class VendingMachineInventoryTest {
     @Test
     public void testReducesMerchandiseOfCodeA() {
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
-        vendingMachineInventory.addMerchandise("A", 2);
-        vendingMachineInventory.addMerchandise("C", 3);
-        vendingMachineInventory.reduceMerchandise("A", 1);
+        vendingMachineInventory.addMerchandise("A", 2).addMerchandise("C", 3).reduceMerchandise("A", 1);
         Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
         expectedInventory.put(new VendingMachineMerchandise("A"), 1);
+        expectedInventory.put(new VendingMachineMerchandise("C"), 3);
+        assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
+    }
+
+    @Test
+    public void testRemovesMerchandiseOfCodeA() {
+        VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
+        vendingMachineInventory.addMerchandise("A", 2).addMerchandise("C", 3).removeMerchandise("A");
+        Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
         expectedInventory.put(new VendingMachineMerchandise("C"), 3);
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
     }
