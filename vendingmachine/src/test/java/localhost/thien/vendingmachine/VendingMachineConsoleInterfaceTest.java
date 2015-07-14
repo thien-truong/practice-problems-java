@@ -56,10 +56,11 @@ public class VendingMachineConsoleInterfaceTest {
         expectedInventory.put(new VendingMachineMerchandise("B"), 5);
         consoleInterface.purchaseMerchandise(vendingMachineInventory);
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
+        assertThat(vendingMachineInventory.getCashBalance(), equalTo(30.75));
 
         new Verifications() {{
             fakePrintStream.print("Enter merchandise code: ");
-            fakePrintStream.println("Your drink is A. Your change is 1.00.");
+            fakePrintStream.println("Enjoy your Pepsi! And here is your change of $0.25.");
         }};
     }
 

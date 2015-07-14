@@ -1,10 +1,7 @@
 package localhost.thien.vendingmachine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class VendingMachineInventory {
     private Map<VendingMachineMerchandise, Integer> inventory = new HashMap<VendingMachineMerchandise, Integer>();
@@ -20,6 +17,10 @@ public class VendingMachineInventory {
 
     public void setCashBalance(Double cashBalance) {
         this.cashBalance = cashBalance;
+    }
+
+    public void resetCashBalanceAfterPurchase(double priceOfMerchandiseSold) {
+        this.cashBalance += priceOfMerchandiseSold;
     }
 
     public VendingMachineInventory addMerchandise(String merchandiseCode, int quantity) {
@@ -47,12 +48,6 @@ public class VendingMachineInventory {
         }
 
         return this;
-    }
-
-    public List<String> generateAvailableMerchandiseCodes() {
-        List<String> availableMerchandiseCodes = new ArrayList<>();
-        inventory.forEach( (item, quantity) -> availableMerchandiseCodes.add(item.getMerchandiseCode()));
-        return availableMerchandiseCodes;
     }
 
 }
