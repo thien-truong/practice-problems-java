@@ -1,0 +1,63 @@
+@startuml
+
+class Main {
+	{static} void main()
+}
+
+class FinishVendingException {
+	+FinishVendingException()
+}
+
+class ObjectRegistry {
+	+Scanner scanner()
+	+VendingMachineInventory vendingMachineInventory()
+	+VendingMachineConsoleInterface consoleInterface()
+}
+
+class VendingMachineConsoleInterface {
+	-keyboard : Scanner
+	+VendingMachineConsoleInterface(keyboard : Scanner)
+	+void purchaseMerchandise(vendingMachineInventory : VendingMachineInventory)
+	-double getMoreCash(merchandisePrice : double, merchandiseName : String, cash : double)
+	-Optional<VendingMachineMerchandise> getVendingMachineMerchandise(vendingMachineInventory: VendingMachineInventory, merchandiseCode: String)
+	+void displayVendingMachineInventory(vendingMachineInventory : VendingMachineInventory)
+}
+
+class VendingMachineInventory {
+	-inventory : Map<VendingMachineMerchandise, Integer>
+	-cashBalance : Double
+	+Map<VendingMachineMerchandise, Integer> getInventory()
+	+Double getCashBalance()
+	+void resetCashBalanceAfterPurchase(priceOfMerchandiseSold : double)
+	+VendingMachineInventory addMerchandise(merchandiseCode: String, quantity: int)
+	+VendingMachineInventory reduceMerchandise(merchandiseCode: String, quantity: int)
+	+VendingMachineInventory removeMerchandise(merchandiseCode: String)
+}
+
+class VendingMachineMerchandise {
+	-merchandiseCode : String
+	-merchandiseName : String
+	-retailPrice : double
+	+String getMerchandiseCode()
+	+String getMerchandiseName()
+	+double getRetailPrice()
+	+VendingMachineMerchandise(merchandiseCode : String)
+}
+
+RuntimeException <|-- FinishVendingException
+
+ObjectRegistry --> VendingMachineConsoleInterface
+
+ObjectRegistry --> VendingMachineInventory
+
+VendingMachineInventory *-- VendingMachineMerchandise
+
+VendingMachineConsoleInterface --> VendingMachineInventory
+
+VendingMachineConsoleInterface --> FinishVendingException
+
+Main --> ObjectRegistry
+
+Main --> FinishVendingException
+
+@enduml

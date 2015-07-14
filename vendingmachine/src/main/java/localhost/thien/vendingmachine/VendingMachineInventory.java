@@ -32,7 +32,8 @@ public class VendingMachineInventory {
                 inventory.put(merchandise, quantity);
             }
         } catch(IllegalArgumentException ex) {
-                System.out.println(ex);
+                System.out.println("Cannot add merchandise with code "
+                                   + merchandiseCode + " to Inventory. " + ex);
             }
 
         return this;

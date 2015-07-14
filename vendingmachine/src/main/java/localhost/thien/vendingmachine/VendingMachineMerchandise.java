@@ -58,7 +58,7 @@ public class VendingMachineMerchandise {
         possibleMerchandiseCode.add("F");
 
         if (!possibleMerchandiseCode.contains(merchandiseCode)) {
-            throw new IllegalArgumentException("Available code are: " + possibleMerchandiseCode.toString());
+            throw new IllegalArgumentException("Available code are " + possibleMerchandiseCode.toString());
         }
 
         switch (merchandiseCode) {
