@@ -8,9 +8,13 @@ public class Main {
         VendingMachineInventory vendingMachineInventory = objectRegistry.vendingMachineInventory();
         vendingMachineInventory.addMerchandise("a", 2).addMerchandise("B", 5).addMerchandise("C", 1);
 
-        while (true) {
+        Boolean finishVending = false;
+
+        while (!finishVending) {
             consoleInterface.displayVendingMachineInventory(vendingMachineInventory);
-            consoleInterface.purchaseMerchandise(vendingMachineInventory);
+            try {
+                consoleInterface.purchaseMerchandise(vendingMachineInventory);
+            } catch(FinishVendingException ex){finishVending = true;}
         }
 
     }

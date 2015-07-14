@@ -43,9 +43,7 @@ public class VendingMachineConsoleInterfaceTest {
 
         new Expectations() {{
             fakeKeyboard.next();
-            result = "A";
-            fakeKeyboard.nextDouble();
-            result = 1.00;
+            returns("A", "1.00");
         }};
 
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
@@ -59,7 +57,7 @@ public class VendingMachineConsoleInterfaceTest {
         assertThat(vendingMachineInventory.getCashBalance(), equalTo(30.75));
 
         new Verifications() {{
-            fakePrintStream.print("Enter the code corresponds to the drink you wish to purchase: ");
+            fakePrintStream.print("Enter XX to quit.  Else enter the code corresponds to the drink you wish to purchase: ");
             fakePrintStream.println("Enjoy your Pepsi! And here is your change of $0.25.");
         }};
     }

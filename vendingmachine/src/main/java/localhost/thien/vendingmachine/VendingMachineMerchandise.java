@@ -1,5 +1,8 @@
 package localhost.thien.vendingmachine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VendingMachineMerchandise {
 
     private String merchandiseCode;
@@ -45,6 +48,19 @@ public class VendingMachineMerchandise {
 
     public VendingMachineMerchandise(String merchandiseCode) {
         this.merchandiseCode = merchandiseCode;
+
+        List<String> possibleMerchandiseCode = new ArrayList<>();
+        possibleMerchandiseCode.add("A");
+        possibleMerchandiseCode.add("B");
+        possibleMerchandiseCode.add("C");
+        possibleMerchandiseCode.add("D");
+        possibleMerchandiseCode.add("E");
+        possibleMerchandiseCode.add("F");
+
+        if (!possibleMerchandiseCode.contains(merchandiseCode)) {
+            throw new IllegalArgumentException("Available code are: " + possibleMerchandiseCode.toString());
+        }
+
         switch (merchandiseCode) {
             case "A":
                 this.merchandiseName = "Pepsi";
@@ -61,6 +77,14 @@ public class VendingMachineMerchandise {
             case "D":
                 this.merchandiseName = "Diet Red Bull";
                 this.retailPrice = 2.50;
+                break;
+            case "E":
+                this.merchandiseCode = "Mineral Water";
+                this.retailPrice = 0.50;
+                break;
+            case "F":
+                this.merchandiseCode = "Mocha Coffee";
+                this.retailPrice = 2.25;
                 break;
             default:
                 break;
