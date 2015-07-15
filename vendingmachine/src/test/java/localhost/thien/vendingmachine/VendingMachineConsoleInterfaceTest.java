@@ -39,25 +39,25 @@ public class VendingMachineConsoleInterfaceTest {
     @Test
     public void testPurchasesMerchandise() {
 
-        VendingMachineConsoleInterface consoleInterface = new VendingMachineConsoleInterface(fakeKeyboard);
+        VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
+        VendingMachineConsoleInterface consoleInterface = new VendingMachineConsoleInterface(fakeKeyboard, vendingMachineInventory);
 
         new Expectations() {{
             fakeKeyboard.next();
             returns("A", "1.00");
         }};
 
-        VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
         vendingMachineInventory.addMerchandise("A", 3);
         vendingMachineInventory.addMerchandise("B", 5);
         Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
         expectedInventory.put(new VendingMachineMerchandise("A"), 2);
         expectedInventory.put(new VendingMachineMerchandise("B"), 5);
-        consoleInterface.purchaseMerchandise(vendingMachineInventory);
+        consoleInterface.purchaseMerchandise();
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
         assertThat(vendingMachineInventory.getCashBalance(), equalTo(30.75));
 
         new Verifications() {{
-            fakePrintStream.print("Enter XX to quit.  Else enter the code corresponds to the drink you wish to purchase: ");
+            fakePrintStream.print("Enter XX to quit.  Otherwise enter the code that corresponds to the drink you wish to purchase: ");
             fakePrintStream.println("Enjoy your Pepsi! And here is your change of $0.25.");
         }};
     }

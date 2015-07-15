@@ -2,6 +2,8 @@ package localhost.thien.vendingmachine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public class VendingMachineInventory {
 
@@ -16,8 +18,21 @@ public class VendingMachineInventory {
         return cashBalance;
     }
 
+    public void forEach(BiConsumer<VendingMachineMerchandise, Integer> action) {
+        inventory.forEach(action);
+    }
+
     public void resetCashBalanceAfterPurchase(double priceOfMerchandiseSold) {
         this.cashBalance += priceOfMerchandiseSold;
+    }
+
+    public Optional<VendingMachineMerchandise> getVendingMachineMerchandise(String merchandiseCode) {
+
+        return inventory.entrySet().stream()
+               .filter(a -> a.getKey().getMerchandiseCode().equals(merchandiseCode))
+               .map(Map.Entry::getKey)
+               .findAny();
+
     }
 
     public VendingMachineInventory addMerchandise(String merchandiseCode, int quantity) {
@@ -32,9 +47,9 @@ public class VendingMachineInventory {
                 inventory.put(merchandise, quantity);
             }
         } catch(IllegalArgumentException ex) {
-                System.out.println("Cannot add merchandise with code "
-                                   + merchandiseCode + " to Inventory. " + ex);
-            }
+            System.out.println("Cannot add merchandise with code "
+                               + merchandiseCode + " to Inventory. " + ex);
+        }
 
         return this;
     }
