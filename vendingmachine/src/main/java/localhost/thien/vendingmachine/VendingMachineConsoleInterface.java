@@ -83,10 +83,6 @@ public class VendingMachineConsoleInterface {
 
         vendingMachineInventory.reduceMerchandise(merchandiseCode, 1);
 
-        if (vendingMachineInventory.getInventory().get(selectedMerchandise) == 0) {
-            vendingMachineInventory.removeMerchandise(merchandiseCode);
-        }
-
         vendingMachineInventory.resetCashBalanceAfterPurchase(merchandisePrice);
         System.out.println(String.format("Enjoy your %s! And here is your change of $%.2f.",
                                          merchandiseName, change));
@@ -116,12 +112,12 @@ public class VendingMachineConsoleInterface {
         System.out.println("Code        Name                Price       Availability");
 
         vendingMachineInventory
-            .forEach((merchandise, quantity) ->
+            .forEach((merchandiseCode, merchandiseStock) ->
                      System.out.printf("%-12s%-20s%-12.2f%-12d\n",
-                                      merchandise.getMerchandiseCode(),
-                                      merchandise.getMerchandiseName(),
-                                      merchandise.getRetailPrice(),
-                                      quantity));
+                                      merchandiseCode,
+                                      merchandiseStock.getMerchandise().getMerchandiseName(),
+                                      merchandiseStock.getMerchandise().getRetailPrice(),
+                                      merchandiseStock.getQuantity()));
     }
 
 }

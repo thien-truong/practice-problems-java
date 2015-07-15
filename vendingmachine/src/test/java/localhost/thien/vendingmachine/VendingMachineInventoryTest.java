@@ -14,39 +14,46 @@ public class VendingMachineInventoryTest {
 
     @Test
     public void testAddsMerchandiseOfCodeAToEmptyInventory() {
+        VendingMachineMerchandise merchandise = new VendingMachineMerchandise("Pepsi", 2.75);
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
-        vendingMachineInventory.addMerchandise("A", 2);
-        Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
-        expectedInventory.put(new VendingMachineMerchandise("A"), 2);
+        vendingMachineInventory.addMerchandise("A", merchandise, 2);
+        Map<String, VendingMachineMerchandiseStock> expectedInventory = new HashMap<>();
+        expectedInventory.put("A", new VendingMachineMerchandiseStock(merchandise, 2));
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
     }
 
     @Test
     public void testAddsMerchandiseOfCodeAToNoneEmptyInventory() {
+        VendingMachineMerchandise pepsi = new VendingMachineMerchandise("Pepsi", 2.75);
+        VendingMachineMerchandise coke = new VendingMachineMerchandise("Coke", .75);
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
-        vendingMachineInventory.addMerchandise("A", 2).addMerchandise("C", 3).addMerchandise("A", 5);
-        Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
-        expectedInventory.put(new VendingMachineMerchandise("A"), 7);
-        expectedInventory.put(new VendingMachineMerchandise("C"), 3);
+        vendingMachineInventory.addMerchandise("A", pepsi, 2).addMerchandise("C", coke, 3).addMerchandise("A", pepsi, 5);
+        Map<String, VendingMachineMerchandiseStock> expectedInventory = new HashMap<>();
+        expectedInventory.put("A", new VendingMachineMerchandiseStock(pepsi, 7));
+        expectedInventory.put("C", new VendingMachineMerchandiseStock(coke, 3));
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
     }
 
     @Test
     public void testReducesMerchandiseOfCodeA() {
+        VendingMachineMerchandise pepsi = new VendingMachineMerchandise("Pepsi", 2.75);
+        VendingMachineMerchandise coke = new VendingMachineMerchandise("Coke", .75);
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
-        vendingMachineInventory.addMerchandise("A", 2).addMerchandise("C", 3).reduceMerchandise("A", 1);
-        Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
-        expectedInventory.put(new VendingMachineMerchandise("A"), 1);
-        expectedInventory.put(new VendingMachineMerchandise("C"), 3);
+        vendingMachineInventory.addMerchandise("A", pepsi, 2).addMerchandise("C", coke, 3).reduceMerchandise("A", 1);
+        Map<String, VendingMachineMerchandiseStock> expectedInventory = new HashMap<>();
+        expectedInventory.put("A", new VendingMachineMerchandiseStock(pepsi, 1));
+        expectedInventory.put("C", new VendingMachineMerchandiseStock(coke, 3));
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
     }
 
     @Test
     public void testRemovesMerchandiseOfCodeA() {
+        VendingMachineMerchandise pepsi = new VendingMachineMerchandise("Pepsi", 2.75);
+        VendingMachineMerchandise coke = new VendingMachineMerchandise("Coke", .75);
         VendingMachineInventory vendingMachineInventory = new VendingMachineInventory();
-        vendingMachineInventory.addMerchandise("A", 2).addMerchandise("C", 3).removeMerchandise("A");
-        Map<VendingMachineMerchandise, Integer> expectedInventory = new HashMap<>();
-        expectedInventory.put(new VendingMachineMerchandise("C"), 3);
+        vendingMachineInventory.addMerchandise("A", pepsi, 2).addMerchandise("C", coke, 3).removeMerchandise("A");
+        Map<String, VendingMachineMerchandiseStock> expectedInventory = new HashMap<>();
+        expectedInventory.put("C", new VendingMachineMerchandiseStock(coke, 3));
         assertThat(vendingMachineInventory.getInventory(), equalTo(expectedInventory));
     }
 
