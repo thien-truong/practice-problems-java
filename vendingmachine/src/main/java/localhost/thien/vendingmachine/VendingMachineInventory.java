@@ -18,10 +18,6 @@ public class VendingMachineInventory {
         return cashBalance;
     }
 
-    public void forEach(BiConsumer<String, VendingMachineMerchandiseStock> action) {
-        inventory.forEach(action);
-    }
-
     public void resetCashBalanceAfterPurchase(double priceOfMerchandiseSold) {
         this.cashBalance += priceOfMerchandiseSold;
     }
@@ -41,9 +37,12 @@ public class VendingMachineInventory {
         String upperCasedMerchandiseCode = merchandiseCode.toUpperCase();
         if (inventory.containsKey(upperCasedMerchandiseCode)) {
             VendingMachineMerchandiseStock merchandiseStock = inventory.get(upperCasedMerchandiseCode);
+
             if (merchandiseStock.getMerchandise() != merchandise) {
-                throw new IllegalArgumentException("Can't add different type of merchandise to same spot");
+                throw new IllegalArgumentException("Either merchandise name or retail price doesn't match what's " +
+                                                   "already in Inventory. Cannot add.");
             }
+
             merchandiseStock.addQuantity(quantity);
         } else {
             VendingMachineMerchandiseStock merchandiseStock = new VendingMachineMerchandiseStock(merchandise, quantity);
@@ -59,10 +58,20 @@ public class VendingMachineInventory {
 
         if (inventory.containsKey(upperCasedMerchandiseCode)) {
             VendingMachineMerchandiseStock merchandiseStock = inventory.get(upperCasedMerchandiseCode);
+
+            if (merchandiseStock.getQuantity() < quantity) {
+                throw new NegativeQuantityException(String.format("There are only %d items of merchandise code %s available. " +
+                                                                  "Reducing %d will result in negative inventory.",
+                                                                 merchandiseStock.getQuantity(),
+                                                                 upperCasedMerchandiseCode, quantity));
+            }
+
             merchandiseStock.reduceQuantity(quantity);
+
             if (merchandiseStock.getQuantity() == 0) {
                 removeMerchandise(upperCasedMerchandiseCode);
             }
+
         }
 
         return this;
@@ -73,6 +82,18 @@ public class VendingMachineInventory {
         inventory.remove(merchandiseCode.toUpperCase());
 
         return this;
+    }
+
+    public void displayVendingMachineInventory() {
+        System.out.println("Code        Name                Price       Availability");
+
+        inventory
+        .forEach((merchandiseCode, merchandiseStock) ->
+                 System.out.printf("%-12s%-20s%-12.2f%-12d\n",
+                                  merchandiseCode,
+                                  merchandiseStock.getMerchandise().getMerchandiseName(),
+                                  merchandiseStock.getMerchandise().getRetailPrice(),
+                                  merchandiseStock.getQuantity()));
     }
 
 }

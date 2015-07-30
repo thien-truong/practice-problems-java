@@ -13,6 +13,7 @@ public class Main {
             .addMerchandise("B", new VendingMachineMerchandise("Coca Cola", 0.75), 5)
             .addMerchandise("C", new VendingMachineMerchandise("Snicker", 2.00), 1);
 
+
         Boolean finishedVending = false;
 
         while (!finishedVending) {

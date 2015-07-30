@@ -16,6 +16,10 @@ public class VendingMachineConsoleInterface {
     public void purchaseMerchandise() {
 
         String merchandiseCode;
+        final double maxCashAcceptedByMachine = 5.0;
+
+        System.out.println(String.format("Please note that this machine cannot accept more than $%.2f in cash.",
+                                        maxCashAcceptedByMachine));
 
         System.out.print("Enter XX to quit.  " +
                          "Otherwise enter the code that corresponds to the drink you wish to purchase: ");
@@ -29,7 +33,7 @@ public class VendingMachineConsoleInterface {
             vendingMachineInventory.getVendingMachineMerchandise(merchandiseCode);
 
         if (selectedMerchandise.isPresent()) {
-            purchaseSpecifiedMerchandise(merchandiseCode, selectedMerchandise.get());
+            purchaseSpecifiedMerchandise(merchandiseCode, selectedMerchandise.get(), maxCashAcceptedByMachine);
         } else {
             System.out.println("No such code in the system.");
         }
@@ -40,33 +44,35 @@ public class VendingMachineConsoleInterface {
 
     private void purchaseSpecifiedMerchandise(
              String merchandiseCode,
-             VendingMachineMerchandise selectedMerchandise) {
+             VendingMachineMerchandise selectedMerchandise,
+             double maxCashAcceptedByMachine) {
 
-        String cashString;
-        final double maxCash = 5.0;
+        double merchandisePrice = selectedMerchandise.getRetailPrice();
+        String merchandiseName = selectedMerchandise.getMerchandiseName();
+        String cashPaidSoFarString;
+        double cashPaidSoFar = 0.0;
 
-        System.out.println(String.format("Please note that this machine cannot accept more than $%.2f in cash.",
-                                        maxCash));
-        System.out.print("Enter cash $: ");
-        cashString = keyboard.next();
+        System.out.print(String.format("You selected a %s, which costs $%.2f. Enter cash $: ",
+                                      merchandiseName,
+                                      merchandisePrice));
+        cashPaidSoFarString = keyboard.next();
+
         try {
-            double cash = Double.parseDouble(cashString);
-            double merchandisePrice = selectedMerchandise.getRetailPrice();
-
-            while (cash < merchandisePrice) {
-                cash = getMoreCash(merchandisePrice, selectedMerchandise.getMerchandiseName(), cash);
-            }
-
-            if (cash <= maxCash) {
-                dispenseMerchandise(merchandiseCode, selectedMerchandise, cash);
-            } else {
-                System.out.println(String.format("This machine cannot accept more than $%.2f in cash.  " +
-                                                 "Here is your $ %.2f back.",
-                                                maxCash, cash));
-            }
-
+            cashPaidSoFar = Double.parseDouble(cashPaidSoFarString);
         } catch (NumberFormatException ex) {
             System.out.println("Error: " + ex + ". Expecting a numeric value.");
+        }
+
+        while (cashPaidSoFar < merchandisePrice) {
+            cashPaidSoFar = getMoreCash(merchandisePrice, selectedMerchandise.getMerchandiseName(), cashPaidSoFar);
+        }
+
+        if (cashPaidSoFar <= maxCashAcceptedByMachine) {
+            dispenseMerchandise(merchandiseCode, selectedMerchandise, cashPaidSoFar);
+        } else {
+            System.out.println(String.format("This machine cannot accept more than $%.2f in cash.  " +
+                                             "Here is your $ %.2f back.",
+                                            maxCashAcceptedByMachine, cashPaidSoFar));
         }
     }
 
@@ -77,46 +83,33 @@ public class VendingMachineConsoleInterface {
 
         double merchandisePrice = selectedMerchandise.getRetailPrice();
         String merchandiseName = selectedMerchandise.getMerchandiseName();
-
         double change = cash - merchandisePrice;
 
         vendingMachineInventory.reduceMerchandise(merchandiseCode, 1);
-
         vendingMachineInventory.resetCashBalanceAfterPurchase(merchandisePrice);
         System.out.println(String.format("Enjoy your %s! And here is your change of $%.2f.",
                                          merchandiseName, change));
     }
 
-    private double getMoreCash(double merchandisePrice, String merchandiseName, double cash) {
-        double additionalCashNeeded;
-        String cashString;
+    private double getMoreCash(double merchandisePrice, String merchandiseName, double cashPaidSoFar) {
+        double additionalCashNeeded = merchandisePrice - cashPaidSoFar;
+        double additionalCashEntered = 0.0;
 
-        additionalCashNeeded = merchandisePrice - cash;
         System.out.print(String.format("Your %s costs $%.2f.  Please enter at least $%.2f more: ",
                                       merchandiseName, merchandisePrice, additionalCashNeeded));
-        cashString = keyboard.next();
+        String additionalCashPaidString = keyboard.next();
 
         try {
-            double additionalCashEntered = Double.parseDouble(cashString);
-            cash += additionalCashEntered;
+            additionalCashEntered = Double.parseDouble(additionalCashPaidString);
         } catch (NumberFormatException ex){
             System.out.println("Error: " + ex + ". Expecting a numeric value.");
         }
 
-        return cash;
+        return cashPaidSoFar + additionalCashEntered;
     }
 
     public void displayVendingMachineInventory() {
-
-        System.out.println("Code        Name                Price       Availability");
-
-        vendingMachineInventory
-            .forEach((merchandiseCode, merchandiseStock) ->
-                     System.out.printf("%-12s%-20s%-12.2f%-12d\n",
-                                      merchandiseCode,
-                                      merchandiseStock.getMerchandise().getMerchandiseName(),
-                                      merchandiseStock.getMerchandise().getRetailPrice(),
-                                      merchandiseStock.getQuantity()));
+        vendingMachineInventory.displayVendingMachineInventory();
     }
 
 }
